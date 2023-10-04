@@ -1,0 +1,8 @@
+{
+  "name": "postplace",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite",
+  "id": "154b277d"
+}
