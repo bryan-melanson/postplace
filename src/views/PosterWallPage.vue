@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <div class="page-root">
     <ion-header>
       <ion-toolbar>
         <ion-title class="wall-title">PostPlace</ion-title>
@@ -67,13 +67,12 @@
         />
       </ion-modal>
     </ion-content>
-  </ion-page>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import {
-  IonPage,
   IonHeader,
   IonToolbar,
   IonTitle,
@@ -106,6 +105,14 @@ function handleAddShow(show: Omit<Show, 'id'>) {
 </script>
 
 <style scoped>
+.page-root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
 ion-toolbar {
   --background: #0a0a0f;
   --color: #fff;
