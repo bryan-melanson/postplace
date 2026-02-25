@@ -1,9 +1,10 @@
 <template>
   <ion-app>
-    <ion-router-outlet></ion-router-outlet>
+    <PosterWallPage />
   </ion-app>
 </template>
 
 <script setup lang="ts">
-import { IonApp, IonRouterOutlet } from '@ionic/vue';
+import { IonApp } from '@ionic/vue';
+import PosterWallPage from './views/PosterWallPage.vue';
 </script>
