@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
+import PosterWallPage from '../views/PosterWallPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -8,7 +9,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/wall',
-    component: () => import('../views/PosterWallPage.vue'),
+    component: PosterWallPage,
   },
 ];
 
