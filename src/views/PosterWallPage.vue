@@ -4,7 +4,7 @@
       <ion-toolbar>
         <ion-title class="wall-title">PostPlace</ion-title>
         <ion-buttons slot="end">
-          <ion-button @click="addOpen = true" aria-label="Add poster">
+          <ion-button @click="openAdd()" aria-label="Add poster">
             <ion-icon :icon="addCircleOutline" slot="icon-only" />
           </ion-button>
         </ion-buttons>
@@ -41,28 +41,13 @@
       </div>
     </ion-content>
 
-    <ion-modal :is-open="detailOpen" @ionModalDidDismiss="detailOpen = false">
-      <ShowDetailModal
-        v-if="selectedShow"
-        :show="selectedShow"
-        @close="detailOpen = false"
-      />
-    </ion-modal>
-
-    <ion-modal :is-open="addOpen" @ionModalDidDismiss="addOpen = false">
-      <AddPosterModal
-        @close="addOpen = false"
-        @add="handleAddShow"
-      />
-    </ion-modal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent,
-  IonButtons, IonButton, IonIcon, IonModal,
+  IonButtons, IonButton, IonIcon, modalController,
 } from '@ionic/vue';
 import { addCircleOutline } from 'ionicons/icons';
 
@@ -71,18 +56,29 @@ import type { Show } from '../data/shows';
 import ShowDetailModal from '../components/ShowDetailModal.vue';
 import AddPosterModal from '../components/AddPosterModal.vue';
 
-const detailOpen = ref(false);
-const addOpen = ref(false);
-const selectedShow = ref<Show | null>(null);
-
-function openDetail(show: Show) {
-  selectedShow.value = show;
-  detailOpen.value = true;
+async function openDetail(show: Show) {
+  const modal = await modalController.create({
+    component: ShowDetailModal,
+    componentProps: {
+      show,
+      onClose: () => modal.dismiss(),
+    },
+  });
+  await modal.present();
 }
 
-function handleAddShow(show: Omit<Show, 'id'>) {
-  addShow(show);
-  addOpen.value = false;
+async function openAdd() {
+  const modal = await modalController.create({
+    component: AddPosterModal,
+    componentProps: {
+      onClose: () => modal.dismiss(),
+      onAdd: (show: Omit<Show, 'id'>) => {
+        addShow(show);
+        modal.dismiss();
+      },
+    },
+  });
+  await modal.present();
 }
 </script>
 
