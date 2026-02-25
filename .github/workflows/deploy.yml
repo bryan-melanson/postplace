@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - claude/show-poster-wall-fB9oS
 
 permissions:
   contents: write
