@@ -41,7 +41,7 @@
       </div>
     </ion-content>
 
-    <ion-modal :is-open="detailOpen" @did-dismiss="detailOpen = false">
+    <ion-modal :is-open="detailOpen" @ionModalDidDismiss="detailOpen = false">
       <ShowDetailModal
         v-if="selectedShow"
         :show="selectedShow"
@@ -49,7 +49,7 @@
       />
     </ion-modal>
 
-    <ion-modal :is-open="addOpen" @did-dismiss="addOpen = false">
+    <ion-modal :is-open="addOpen" @ionModalDidDismiss="addOpen = false">
       <AddPosterModal
         @close="addOpen = false"
         @add="handleAddShow"

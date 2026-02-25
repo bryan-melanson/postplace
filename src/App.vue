@@ -1,23 +1,19 @@
 <template>
-  <div class="app-root">
+  <ion-app>
     <PosterWallPage />
-  </div>
+  </ion-app>
 </template>
 
 <script setup lang="ts">
+import { IonApp } from '@ionic/vue';
 import PosterWallPage from './views/PosterWallPage.vue';
 </script>
 
 <style>
-html, body, #app, .app-root {
+html, body, #app {
   width: 100%;
   height: 100%;
   background: #0a0a0f;
   overflow: hidden;
-}
-
-.app-root {
-  display: flex;
-  flex-direction: column;
 }
 </style>
