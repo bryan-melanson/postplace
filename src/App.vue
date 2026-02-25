@@ -9,15 +9,22 @@ import PosterWallPage from './views/PosterWallPage.vue';
 </script>
 
 <style>
-html, body, #app, .app-root {
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
   background: #0a0a0f;
+  overflow: hidden;
 }
-.app-root {
+
+#app, .app-root {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }

@@ -1,17 +1,15 @@
 <template>
   <div class="page-root">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title class="wall-title">PostPlace</ion-title>
-        <ion-buttons slot="end">
-          <ion-button @click="addOpen = true" class="add-btn" aria-label="Add poster">
-            <ion-icon :icon="addOutline" slot="icon-only"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+    <header class="toolbar">
+      <h1 class="wall-title">PostPlace</h1>
+      <button class="add-btn" @click="addOpen = true" aria-label="Add poster">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="22" height="22" fill="currentColor">
+          <path d="M256 48a208 208 0 1 1 0 416A208 208 0 1 1 256 48zm0-48a256 256 0 1 0 0 512A256 256 0 1 0 256 0zM232 344v-88H144c-13.3 0-24-10.7-24-24s10.7-24 24-24h88V120c0-13.3 10.7-24 24-24s24 10.7 24 24v88h88c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v88c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/>
+        </svg>
+      </button>
+    </header>
 
-    <ion-content :fullscreen="true" class="wall-content">
+    <div class="wall-content">
       <div class="poster-grid">
         <div
           v-for="show in shows"
@@ -39,50 +37,33 @@
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Show Detail Modal -->
-      <ion-modal
-        :is-open="detailOpen"
-        @did-dismiss="detailOpen = false"
-        :initial-breakpoint="1"
-        :breakpoints="[0, 1]"
-      >
+    <!-- Show Detail Modal -->
+    <div v-if="detailOpen" class="modal-overlay" @click.self="detailOpen = false">
+      <div class="modal-sheet">
         <ShowDetailModal
           v-if="selectedShow"
           :show="selectedShow"
           @close="detailOpen = false"
         />
-      </ion-modal>
+      </div>
+    </div>
 
-      <!-- Add Poster Modal -->
-      <ion-modal
-        :is-open="addOpen"
-        @did-dismiss="addOpen = false"
-        :initial-breakpoint="1"
-        :breakpoints="[0, 1]"
-      >
+    <!-- Add Poster Modal -->
+    <div v-if="addOpen" class="modal-overlay" @click.self="addOpen = false">
+      <div class="modal-sheet">
         <AddPosterModal
           @close="addOpen = false"
           @add="handleAddShow"
         />
-      </ion-modal>
-    </ion-content>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonButtons,
-  IonButton,
-  IonIcon,
-  IonModal,
-} from '@ionic/vue';
-import { addOutline } from 'ionicons/icons';
 
 import { shows, addShow } from '../data/shows';
 import type { Show } from '../data/shows';
@@ -113,25 +94,46 @@ function handleAddShow(show: Omit<Show, 'id'>) {
   overflow: hidden;
 }
 
-ion-toolbar {
-  --background: #0a0a0f;
-  --color: #fff;
-  --border-color: rgba(255, 255, 255, 0.08);
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  height: 56px;
+  background: #0a0a0f;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
 }
 
 .wall-title {
   font-weight: 800;
   letter-spacing: -0.02em;
   font-size: 22px;
+  color: #fff;
+  margin: 0;
 }
 
 .add-btn {
-  --color: #fff;
-  font-size: 22px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.add-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .wall-content {
-  --background: #0a0a0f;
+  flex: 1;
+  overflow-y: auto;
+  background: #0a0a0f;
+  -webkit-overflow-scrolling: touch;
 }
 
 .poster-grid {
@@ -274,5 +276,22 @@ ion-toolbar {
 
 .size-medium .poster-name {
   font-size: 14px;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+}
+
+.modal-sheet {
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  border-radius: 16px 16px 0 0;
 }
 </style>
