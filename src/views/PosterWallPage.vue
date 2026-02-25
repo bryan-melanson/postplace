@@ -1,15 +1,17 @@
 <template>
   <div class="page-root">
-    <header class="toolbar">
-      <h1 class="wall-title">PostPlace</h1>
-      <button class="add-btn" @click="addOpen = true" aria-label="Add poster">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="22" height="22" fill="currentColor">
-          <path d="M256 48a208 208 0 1 1 0 416A208 208 0 1 1 256 48zm0-48a256 256 0 1 0 0 512A256 256 0 1 0 256 0zM232 344v-88H144c-13.3 0-24-10.7-24-24s10.7-24 24-24h88V120c0-13.3 10.7-24 24-24s24 10.7 24 24v88h88c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v88c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/>
-        </svg>
-      </button>
-    </header>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title class="wall-title">PostPlace</ion-title>
+        <ion-buttons slot="end">
+          <ion-button @click="addOpen = true" aria-label="Add poster">
+            <ion-icon :icon="addCircleOutline" slot="icon-only" />
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
 
-    <div class="wall-content">
+    <ion-content :scroll-events="false">
       <div class="poster-grid">
         <div
           v-for="show in shows"
@@ -37,33 +39,32 @@
           </div>
         </div>
       </div>
-    </div>
+    </ion-content>
 
-    <!-- Show Detail Modal -->
-    <div v-if="detailOpen" class="modal-overlay" @click.self="detailOpen = false">
-      <div class="modal-sheet">
-        <ShowDetailModal
-          v-if="selectedShow"
-          :show="selectedShow"
-          @close="detailOpen = false"
-        />
-      </div>
-    </div>
+    <ion-modal :is-open="detailOpen" @did-dismiss="detailOpen = false">
+      <ShowDetailModal
+        v-if="selectedShow"
+        :show="selectedShow"
+        @close="detailOpen = false"
+      />
+    </ion-modal>
 
-    <!-- Add Poster Modal -->
-    <div v-if="addOpen" class="modal-overlay" @click.self="addOpen = false">
-      <div class="modal-sheet">
-        <AddPosterModal
-          @close="addOpen = false"
-          @add="handleAddShow"
-        />
-      </div>
-    </div>
+    <ion-modal :is-open="addOpen" @did-dismiss="addOpen = false">
+      <AddPosterModal
+        @close="addOpen = false"
+        @add="handleAddShow"
+      />
+    </ion-modal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import {
+  IonHeader, IonToolbar, IonTitle, IonContent,
+  IonButtons, IonButton, IonIcon, IonModal,
+} from '@ionic/vue';
+import { addCircleOutline } from 'ionicons/icons';
 
 import { shows, addShow } from '../data/shows';
 import type { Show } from '../data/shows';
@@ -94,48 +95,12 @@ function handleAddShow(show: Omit<Show, 'id'>) {
   overflow: hidden;
 }
 
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 12px;
-  height: 56px;
-  background: #0a0a0f;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  flex-shrink: 0;
-}
-
 .wall-title {
   font-weight: 800;
   letter-spacing: -0.02em;
-  font-size: 22px;
-  color: #fff;
-  margin: 0;
 }
 
-.add-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-.add-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.wall-content {
-  flex: 1;
-  overflow-y: auto;
-  background: #0a0a0f;
-  -webkit-overflow-scrolling: touch;
-}
-
+/* Poster grid */
 .poster-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -148,25 +113,10 @@ function handleAddShow(show: Omit<Show, 'id'>) {
 }
 
 /* Poster size variants */
-.poster.size-small {
-  grid-column: span 1;
-  grid-row: span 1;
-}
-
-.poster.size-medium {
-  grid-column: span 1;
-  grid-row: span 2;
-}
-
-.poster.size-large {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-
-.poster.size-wide {
-  grid-column: span 2;
-  grid-row: span 1;
-}
+.poster.size-small  { grid-column: span 1; grid-row: span 1; }
+.poster.size-medium { grid-column: span 1; grid-row: span 2; }
+.poster.size-large  { grid-column: span 2; grid-row: span 2; }
+.poster.size-wide   { grid-column: span 2; grid-row: span 1; }
 
 /* Poster card */
 .poster {
@@ -178,10 +128,7 @@ function handleAddShow(show: Omit<Show, 'id'>) {
   transition: transform 0.2s ease;
 }
 
-.poster:hover {
-  transform: scale(1.02);
-  z-index: 1;
-}
+.poster:hover { transform: scale(1.02); z-index: 1; }
 
 .poster:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.6);
@@ -196,9 +143,7 @@ function handleAddShow(show: Omit<Show, 'id'>) {
   transition: transform 0.35s ease;
 }
 
-.poster:hover .poster-img {
-  transform: scale(1.07);
-}
+.poster:hover .poster-img { transform: scale(1.07); }
 
 /* Text overlay */
 .poster-overlay {
@@ -223,11 +168,7 @@ function handleAddShow(show: Omit<Show, 'id'>) {
   opacity: 1;
 }
 
-.poster-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
+.poster-meta { display: flex; flex-direction: column; gap: 2px; }
 
 .poster-genre {
   display: inline-block;
@@ -253,45 +194,11 @@ function handleAddShow(show: Omit<Show, 'id'>) {
   margin: 0;
 }
 
-/* Large posters always show info, adjust font sizes */
-.size-large .poster-overlay {
-  padding: 16px;
-}
-
-.size-large .poster-genre {
-  font-size: 11px;
-}
-
-.size-large .poster-name {
-  font-size: 18px;
-}
-
-.size-large .poster-artist {
-  font-size: 13px;
-}
-
-.size-medium .poster-overlay {
-  padding: 12px;
-}
-
-.size-medium .poster-name {
-  font-size: 14px;
-}
-
-/* Modal overlay */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 100;
-  display: flex;
-  align-items: flex-end;
-}
-
-.modal-sheet {
-  width: 100%;
-  max-height: 100%;
-  overflow-y: auto;
-  border-radius: 16px 16px 0 0;
-}
+/* Large/medium poster text adjustments */
+.size-large .poster-overlay { padding: 16px; }
+.size-large .poster-genre   { font-size: 11px; }
+.size-large .poster-name    { font-size: 18px; }
+.size-large .poster-artist  { font-size: 13px; }
+.size-medium .poster-overlay { padding: 12px; }
+.size-medium .poster-name    { font-size: 14px; }
 </style>
