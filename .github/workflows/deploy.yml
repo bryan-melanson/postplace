@@ -3,8 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
-      - claude/show-poster-wall-fB9oS
+      - '**'
 
 permissions:
   contents: read
