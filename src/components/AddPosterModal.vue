@@ -35,7 +35,8 @@
       <div class="field-row">
         <div class="field">
           <label class="label">Date *</label>
-          <input v-model="form.date" class="input" type="text" placeholder="e.g. May 15, 2026" required />
+          <input v-model="form.date" class="input" :class="{ 'input-warn': isDateInPast }" type="text" placeholder="e.g. May 15, 2026" required />
+          <span v-if="isDateInPast" class="warn">This date is in the past</span>
         </div>
         <div class="field">
           <label class="label">Time</label>
@@ -110,7 +111,17 @@ const imagePreview = computed(() => {
   return null;
 });
 
-const isValid = computed(() => form.title.trim() && form.artist.trim() && form.venue.trim() && form.date.trim());
+const isDateInPast = computed(() => {
+  const trimmed = form.date.trim();
+  if (!trimmed) return false;
+  const parsed = new Date(trimmed);
+  if (isNaN(parsed.getTime())) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return parsed < today;
+});
+
+const isValid = computed(() => form.title.trim() && form.artist.trim() && form.venue.trim() && form.date.trim() && !isDateInPast.value);
 
 function handleSubmit() {
   if (!isValid.value) return;
@@ -254,6 +265,16 @@ function handleSubmit() {
 .hint {
   font-size: 11px;
   color: rgba(255, 255, 255, 0.3);
+  margin-top: -2px;
+}
+
+.input-warn {
+  border-color: #f59e0b;
+}
+
+.warn {
+  font-size: 11px;
+  color: #f59e0b;
   margin-top: -2px;
 }
 
