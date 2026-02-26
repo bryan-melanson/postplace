@@ -12,9 +12,7 @@
     </ion-header>
 
     <ion-content :scroll-events="false">
-      <div v-if="showsLoading" class="loading">Loading…</div>
-      <div v-else-if="showsError" class="error">{{ showsError }}</div>
-      <div v-else class="poster-grid">
+      <div class="poster-grid">
         <div
           v-for="show in shows"
           :key="show.id"
@@ -47,17 +45,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent,
   IonButtons, IonButton, IonIcon, modalController,
 } from '@ionic/vue';
 import { addCircleOutline } from 'ionicons/icons';
 
-import { shows, showsLoading, showsError, fetchShows, addShow } from '../data/shows';
+import { shows, addShow } from '../data/shows';
 import type { Show } from '../data/shows';
-
-onMounted(fetchShows);
 import ShowDetailModal from '../components/ShowDetailModal.vue';
 import AddPosterModal from '../components/AddPosterModal.vue';
 
@@ -194,17 +189,6 @@ async function openAdd() {
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
 }
-
-.loading, .error {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: rgba(255, 255, 255, 0.4);
-  font-size: 15px;
-}
-
-.error { color: #f87171; }
 
 /* Large/medium poster text adjustments */
 .size-large .poster-overlay { padding: 16px; }
