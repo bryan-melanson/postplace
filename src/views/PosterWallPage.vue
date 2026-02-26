@@ -14,7 +14,7 @@
     <ion-content :scroll-events="false">
       <div class="poster-grid">
         <div
-          v-for="show in shows"
+          v-for="show in upcomingShows"
           :key="show.id"
           class="poster"
           :class="`size-${show.posterSize}`"
@@ -45,6 +45,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent,
   IonButtons, IonButton, IonIcon, modalController,
@@ -55,6 +56,12 @@ import { shows, addShow } from '../data/shows';
 import type { Show } from '../data/shows';
 import ShowDetailModal from '../components/ShowDetailModal.vue';
 import AddPosterModal from '../components/AddPosterModal.vue';
+
+const upcomingShows = computed(() => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return shows.filter(show => new Date(show.date) >= today);
+});
 
 async function openDetail(show: Show) {
   const modal = await modalController.create({
