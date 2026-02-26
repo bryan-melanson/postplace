@@ -35,7 +35,7 @@
       <div class="field-row">
         <div class="field">
           <label class="label">Date *</label>
-          <input v-model="form.date" class="input" :class="{ 'input-warn': isDateInPast }" type="text" placeholder="e.g. May 15, 2026" required />
+          <input v-model="form.date" class="input" :class="{ 'input-warn': isDateInPast }" type="date" :min="todayStr" required />
           <span v-if="isDateInPast" class="warn">This date is in the past</span>
         </div>
         <div class="field">
@@ -106,22 +106,25 @@ const form = reactive({
 
 let placeholderSeed = Math.floor(Math.random() * 10000);
 
+const todayStr = new Date().toISOString().slice(0, 10);
+
 const imagePreview = computed(() => {
   if (form.imageUrl.trim()) return form.imageUrl.trim();
   return null;
 });
 
 const isDateInPast = computed(() => {
-  const trimmed = form.date.trim();
-  if (!trimmed) return false;
-  const parsed = new Date(trimmed);
-  if (isNaN(parsed.getTime())) return false;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return parsed < today;
+  if (!form.date) return false;
+  return form.date < todayStr;
 });
 
-const isValid = computed(() => form.title.trim() && form.artist.trim() && form.venue.trim() && form.date.trim() && !isDateInPast.value);
+const isValid = computed(() => form.title.trim() && form.artist.trim() && form.venue.trim() && form.date && !isDateInPast.value);
+
+function formatDate(dateStr: string): string {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const d = new Date(year, month - 1, day);
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
 
 function handleSubmit() {
   if (!isValid.value) return;
@@ -141,7 +144,7 @@ function handleSubmit() {
     title: form.title.trim(),
     artist: form.artist.trim(),
     venue: form.venue.trim(),
-    date: form.date.trim(),
+    date: formatDate(form.date),
     time: form.time.trim() || 'TBA',
     description: form.description.trim() || 'No description provided.',
     genre: form.genre.trim() || 'Live Event',
@@ -259,6 +262,11 @@ function handleSubmit() {
 .color-input {
   padding: 4px 6px;
   height: 42px;
+  cursor: pointer;
+}
+
+input[type="date"] {
+  color-scheme: dark;
   cursor: pointer;
 }
 
