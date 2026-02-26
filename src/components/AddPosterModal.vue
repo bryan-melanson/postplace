@@ -35,7 +35,7 @@
       <div class="field-row">
         <div class="field">
           <label class="label">Date *</label>
-          <input v-model="form.date" class="input" :class="{ 'input-warn': isDateInPast }" type="date" :min="todayStr" required />
+          <input v-model="form.date" class="input" :class="{ 'input-warn': isDateInPast }" type="date" :min="todayStr" :style="{ color: form.date ? '' : 'transparent' }" required />
           <span v-if="isDateInPast" class="warn">This date is in the past</span>
         </div>
         <div class="field">
