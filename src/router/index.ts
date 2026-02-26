@@ -1,20 +1,21 @@
-import { createRouter, createWebHistory } from '@ionic/vue-router';
+import { createRouter, createWebHashHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
+import PosterWallPage from '../views/PosterWallPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '',
-    redirect: '/folder/Inbox'
+    path: '/',
+    redirect: '/wall',
   },
   {
-    path: '/folder/:id',
-    component: () => import ('../views/FolderPage.vue')
-  }
-]
+    path: '/wall',
+    component: PosterWallPage,
+  },
+];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes
-})
+  history: createWebHashHistory(),
+  routes,
+});
 
-export default router
+export default router;
